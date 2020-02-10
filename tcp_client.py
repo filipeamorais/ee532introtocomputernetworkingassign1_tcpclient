@@ -1,19 +1,42 @@
-import socket
+# Socket client example in python
 
-HOST = 'gaia.cs.umass.edu'  # The server's hostname or IP address
-PORT = 80        # The port used by the server
+import socket
+import sys  
+
+host = 'gaia.cs.umass.edu'
+port = 80  # web
+
+# create socket
+print('# Creating socket')
+try:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+except socket.error:
+    print('Failed to create socket')
+    sys.exit()
+
+print('# Getting remote IP address') 
+try:
+    remote_ip = socket.gethostbyname( host )
+except socket.gaierror:
+    print('Hostname could not be resolved. Exiting')
+    sys.exit()
+
+# Connect to remote server
+print('# Connecting to server, ' + host + ' (' + remote_ip + ')')
+s.connect((remote_ip , port))
+
+# Send data to remote server
+print('# Sending data to server')
+request = (b'GET / HTTP/1.0\r\n\r\n')
 
 try:
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-        print ("Socket successfully created")
-        s.connect((HOST, PORT))
-        s.send(b'GET /kurose_ross/interactive/index.php HTTP/1.1 Host: gaia.cs.umass.edu \r\n')
-        data = s.recv(1024)
-        while (len(data) > 0):
-            print(data)
-            data = s.recv(10000)
+    s.sendall(request)
+except socket.error:
+    print ('Send failed')
+    sys.exit()
 
-except socket.error as err: 
-    print ("socket creation failed with error %s") %(err)  
+# Receive data
+print('# Receive data from server')
+reply = s.recv(4096)
 
-#print('Received', repr(data))
+print (reply)
