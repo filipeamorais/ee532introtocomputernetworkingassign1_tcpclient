@@ -1,5 +1,3 @@
-# Socket client example in python
-
 import socket
 import sys  
 
@@ -24,10 +22,11 @@ except socket.gaierror:
 # Connect to remote server
 print('# Connecting to server, ' + host + ' (' + remote_ip + ')')
 s.connect((remote_ip , port))
+#s.connect((host , port))
 
 # Send data to remote server
 print('# Sending data to server')
-request = (b'GET / HTTP/1.0\r\n\r\n')
+request = (b'GET /kurose_ross/interactive/index.php HTTP/1.1\r\nHost:gaia.cs.umass.edu\r\n\r\n')
 
 try:
     s.sendall(request)
@@ -37,6 +36,6 @@ except socket.error:
 
 # Receive data
 print('# Receive data from server')
-reply = s.recv(4096)
+reply = s.recv(1024)
 
 print (reply)
