@@ -1,5 +1,5 @@
 import socket
-import sys  
+import sys
 
 host = 'gaia.cs.umass.edu'
 port = 80  # web
@@ -22,7 +22,6 @@ except socket.gaierror:
 # Connect to remote server
 print('# Connecting to server, ' + host + ' (' + remote_ip + ')')
 s.connect((remote_ip , port))
-#s.connect((host , port))
 
 # Send data to remote server
 print('# Sending data to server')
@@ -36,6 +35,13 @@ except socket.error:
 
 # Receive data
 print('# Receive data from server')
-reply = s.recv(1024)
+reply = s.recv(8192)
 
 print (reply)
+
+# Write response
+print('# Writing the data from server in a file')
+f= open("response.html","w+")
+f.write(reply.decode("utf-8"))
+f.close()
+print('# Finished!')
